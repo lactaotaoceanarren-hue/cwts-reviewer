@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>100-Item Practice Quiz: 1st Sem Final Examination Reviewer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: rgba(148, 163, 184, 0.25);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --success: #22c55e;
+      --error: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(160deg, #1e293b 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+
+    .filter-bar label {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .filter-bar select {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.95rem;
+      max-width: 100%;
+    }
+
+    .score-banner {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.75rem;
+      text-align: center;
+    }
+
+    .score-banner.visible {
+      display: block;
+    }
+
+    .score-banner h2 {
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .topic-heading {
+      margin: 2.2rem 0 1rem;
+      font-size: 1.2rem;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.45rem;
+    }
+
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.35rem;
+      margin-bottom: 1rem;
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 0.9rem;
+      font-size: 1.02rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      cursor: pointer;
+    }
+
+    .option-label:hover {
+      background: rgba(56, 189, 248, 0.1);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .option-label input[type="radio"] {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .option-label.correct {
+      background: rgba(34, 197, 94, 0.18);
+      border-color: var(--success);
+    }
+
+    .option-label.incorrect {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: var(--error);
+    }
+
+    .explanation {
+      display: none;
+      margin-top: 0.8rem;
+      padding-top: 0.7rem;
+      border-top: 1px dashed var(--border);
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+
+    .explanation.visible {
+      display: block;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.85rem;
+      justify-content: center;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 700;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: var(--accent-hover);
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary:hover {
+      background: rgba(148, 163, 184, 0.14);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>1st Sem Final Examination Reviewer</h1>
+      <p>Interactive 100-item multiple-choice practice exam</p>
+    </header>
+
+    <div class="filter-bar">
+      <label for="topicFilter">Filter by Section:</label>
+      <select id="topicFilter">
+        <option value="ALL">All 100 Questions</option>
+        <option value="Section 1: Military Courtesy and Discipline (Questions 1-25)">Section 1: Military Courtesy &amp; Discipline (1-25)</option>
+        <option value="Section 2: Military Customs and Traditions (Questions 26-50)">Section 2: Military Customs &amp; Traditions (26-50)</option>
+        <option value="Section 3: First Aid (Questions 51-70)">Section 3: First Aid (51-70)</option>
+        <option value="Section 4: Philippine Military History (Questions 71-85)">Section 4: Philippine Military History (71-85)</option>
+        <option value="Section 5: WWII, Liberation, Post-WWII &amp; M16 Rifle (Questions 86-100)">Section 5: WWII, Liberation, Post-WWII &amp; M16 Rifle (86-100)</option>
+      </select>
+    </div>
+
+    <div id="scoreBanner" class="score-banner" aria-live="polite">
+      <h2 id="scoreText"></h2>
+      <p id="scoreSubtext"></p>
+    </div>
+
+    <form id="quizForm">
+      <div id="quizContainer"></div>
+
+      <div class="actions">
+        <button type="submit" id="checkBtn">Check Answers</button>
+        <button type="button" id="resetBtn" class="secondary">Reset Quiz</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    (function () {
+      const quizData = [
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "1. What is defined as a state of order and obedience existing within a command, rendering obedience and proper conduct instinctive under all conditions?",
+                "options": [
+                        "A) Military Courtesy",
+                        "B) Military Discipline",
+                        "C) Morale",
+                        "D) Esprit de Corps"
+                ],
+                "answer": 1,
+                "explain": "Military Discipline is a state of order and obedience existing within a command that renders obedience and proper conduct instinctive under all conditions."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "2. What term refers to the acts of politeness, civility, and respect that military personnel accord to one another?",
+                "options": [
+                        "A) Military Discipline",
+                        "B) Courtesy of the Post",
+                        "C) Military Courtesy",
+                        "D) Chain of Command"
+                ],
+                "answer": 2,
+                "explain": "Military Courtesy consists of the acts of politeness, civility, and respect accorded among military personnel."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "3. What is the mental state and spirit of an individual or unit called?",
+                "options": [
+                        "A) Discipline",
+                        "B) Loyalty",
+                        "C) Morale",
+                        "D) Valor"
+                ],
+                "answer": 2,
+                "explain": "Morale is the mental state and spirit of an individual or unit."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "4. Which of the following is NOT one of the three ways discipline is created and maintained according to the reviewer?",
+                "options": [
+                        "A) Training",
+                        "B) Judicious Use of Punishment and Reward",
+                        "C) Instilling Confidence and Responsibility",
+                        "D) Enforcing Strict Curfews"
+                ],
+                "answer": 3,
+                "explain": "Discipline is created and maintained through Training, Judicious Use of Punishment and Reward, and Instilling Confidence and Responsibility."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "5. In the judicious use of punishment and reward, how are praise/rewards and punishment/reprimands handled?",
+                "options": [
+                        "A) Both are given in public",
+                        "B) Praise/rewards are given in public; punishment/reprimands are administered in private",
+                        "C) Both are administered in private",
+                        "D) Praise/rewards are given in private; punishment/reprimands are given in public"
+                ],
+                "answer": 1,
+                "explain": "Praise or rewards are given in public, while punishment or reprimands are administered in private."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "6. What does 'instilling confidence and responsibility' involve?",
+                "options": [
+                        "A) Assigning tasks only to senior officers",
+                        "B) Empowering soldiers to take ownership of their duties",
+                        "C) Avoiding delegation during training",
+                        "D) Giving constant rewards for routine tasks"
+                ],
+                "answer": 1,
+                "explain": "Instilling confidence and responsibility means empowering soldiers to take ownership of their duties."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "7. Which act is described as 'the most important and common form of all military courtesies'?",
+                "options": [
+                        "A) Shaking hands",
+                        "B) Standing at attention",
+                        "C) The salute",
+                        "D) Rendering arrival honors"
+                ],
+                "answer": 2,
+                "explain": "The salute is the most important and common form of all military courtesies."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "8. Who among the following is entitled to a salute?",
+                "options": [
+                        "A) Civilian visitors inside a camp",
+                        "B) Commissioned Officers of the AFP and friendly foreign nations",
+                        "C) Enlisted personnel off duty",
+                        "D) Street vendors outside a base"
+                ],
+                "answer": 1,
+                "explain": "Commissioned Officers of the AFP and friendly foreign nations (along with the National Flag/Anthem and high civilian officials/dignitaries during honors) are entitled to a salute."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "9. When are the National Flag and National Anthem entitled to a salute?",
+                "options": [
+                        "A) Only during wartime",
+                        "B) During reveille, retreat, or ceremonies",
+                        "C) Only inside headquarters buildings",
+                        "D) Only when carried by an officer"
+                ],
+                "answer": 1,
+                "explain": "The National Flag and National Anthem are saluted during reveille, retreat, or ceremonies."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "10. What is the standard saluting distance when meeting and recognizing a person entitled to the salute outdoors?",
+                "options": [
+                        "A) 1 to 3 paces",
+                        "B) 2 to 5 paces",
+                        "C) 6 to 30 paces",
+                        "D) 30 to 50 paces"
+                ],
+                "answer": 2,
+                "explain": "Standard saluting distance outdoors is 6 to 30 paces."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "11. At how many paces before passing is a salute usually rendered?",
+                "options": [
+                        "A) 2 paces",
+                        "B) 6 paces",
+                        "C) 10 paces",
+                        "D) 15 paces"
+                ],
+                "answer": 1,
+                "explain": "A salute is usually rendered at 6 paces before passing."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "12. In which situation should you NOT salute?",
+                "options": [
+                        "A) When reporting to an officer indoors",
+                        "B) When the National Anthem is played",
+                        "C) When troops are at work or actively engaged in duties",
+                        "D) When meeting a commissioned officer outdoors at saluting distance"
+                ],
+                "answer": 2,
+                "explain": "Personnel do not salute when troops are at work or actively engaged in duties."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "13. Should you salute when riding in a public conveyance such as a bus or jeepney?",
+                "options": [
+                        "A) Yes, whenever passing an officer",
+                        "B) Yes, when passing a camp gate",
+                        "C) No",
+                        "D) Only if seated in the front"
+                ],
+                "answer": 2,
+                "explain": "You do not salute when riding in a public conveyance (e.g., bus, jeepney)."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "14. When troops are in ranks or formation, who salutes for the whole formation?",
+                "options": [
+                        "A) Each individual soldier at the front row",
+                        "B) The senior enlisted member",
+                        "C) The commander",
+                        "D) The guide on the right"
+                ],
+                "answer": 2,
+                "explain": "When in ranks, the commander salutes for the whole formation."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "15. What is the proper procedure when reporting to an officer?",
+                "options": [
+                        "A) Walk right in, sit down, and state your business",
+                        "B) Knock before entering, enter when told, halt 2 paces from the officer's desk, salute, state business, and salute again before leaving",
+                        "C) Salute from the doorway without knocking and leave without saluting",
+                        "D) Wait outside until called, then stand 10 paces away without saluting"
+                ],
+                "answer": 1,
+                "explain": "Knock before entering, enter when told, halt 2 paces from the desk, salute, state your business, and salute again before leaving."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "16. What should the first person to see a senior officer enter a room call out?",
+                "options": [
+                        "A) 'At ease!'",
+                        "B) 'Carry on!'",
+                        "C) 'Attention!'",
+                        "D) 'Present arms!'"
+                ],
+                "answer": 2,
+                "explain": "The first person to see a senior officer enter calls 'Attention!' and everyone rises and stands at attention."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "17. Which phrases does a senior officer use to end standing at attention after entering a room?",
+                "options": [
+                        "A) 'Dismissed' or 'Fall out'",
+                        "B) 'Carry on' or 'As you were'",
+                        "C) 'Stand easy' or 'Rest'",
+                        "D) 'Order arms' or 'Right face'"
+                ],
+                "answer": 1,
+                "explain": "Personnel remain at attention until the officer says 'Carry on' or 'As you were.'"
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "18. When walking with a senior officer, where should you walk?",
+                "options": [
+                        "A) On the right side and slightly ahead",
+                        "B) Behind them at 2 paces",
+                        "C) On the left side and keep in step with them",
+                        "D) On whichever side has more shade"
+                ],
+                "answer": 2,
+                "explain": "Always walk on the left side of a senior officer and keep in step with them."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "19. In boarding and exiting military vehicles, what is the proper order and seating?",
+                "options": [
+                        "A) Seniors enter first and take the left seat; juniors exit first",
+                        "B) Juniors enter first and take the left seat; seniors enter last, take the right seat, and exit first",
+                        "C) Juniors enter first and take the right seat; seniors exit last",
+                        "D) Everyone enters simultaneously and chooses any seat"
+                ],
+                "answer": 1,
+                "explain": "Juniors enter first and take the left seat; seniors enter last, take the right seat, and exit first."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "20. How should officers and enlisted personnel be addressed?",
+                "options": [
+                        "A) Officers by first name; enlisted personnel by 'Sir'",
+                        "B) Officers by rank or 'Sir' / 'Ma'am'; enlisted personnel by rank and last name",
+                        "C) Officers by last name only; enlisted personnel by rank only",
+                        "D) Both by 'Sir' / 'Ma'am' at all times"
+                ],
+                "answer": 1,
+                "explain": "Address officers by rank or 'Sir'/'Ma'am,' and address enlisted personnel by rank and last name."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "21. Why is using the third person (e.g., 'Sir, Cadet Dela Cruz requests...') considered poor taste, and what should be used instead?",
+                "options": [
+                        "A) It sounds too informal; use passive voice instead",
+                        "B) It is considered poor taste; use the first person instead (e.g., 'Sir, I request...')",
+                        "C) It is too brief; use full titles of every officer present",
+                        "D) It is acceptable only in writing"
+                ],
+                "answer": 1,
+                "explain": "Using the third person is poor taste; use the first person ('Sir, I request...') instead."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "22. What should you do instead of making alibis or excuses when a mistake happens?",
+                "options": [
+                        "A) Blame equipment failure",
+                        "B) Offer no excuses and take responsibility for mistakes",
+                        "C) Wait to be asked before admitting it",
+                        "D) Transfer the task to a junior"
+                ],
+                "answer": 1,
+                "explain": "Offer no excuses\u2014take responsibility for mistakes instead of making alibis."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "23. Which military taboo warns against showing fake flattery or excessive submissiveness?",
+                "options": [
+                        "A) Uniform must not be defamed",
+                        "B) Offer no excuses",
+                        "C) Servility is scorned",
+                        "D) Avoid excessive indebtedness"
+                ],
+                "answer": 2,
+                "explain": "Servility is scorned: show genuine respect, not fake flattery or excessive submissiveness."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "24. Why should you avoid praising your commander to their face and going over an officer's head?",
+                "options": [
+                        "A) Compliments in person are inappropriate, and you must always follow the chain of command",
+                        "B) Commanders dislike hearing about unit performance",
+                        "C) Going over an officer's head is allowed during emergencies only",
+                        "D) Praising superiors is reserved for ceremonies"
+                ],
+                "answer": 0,
+                "explain": "Compliments to superiors in person are considered inappropriate, and personnel must always follow the chain of command."
+        },
+        {
+                "topic": "Section 1: Military Courtesy and Discipline (Questions 1-25)",
+                "q": "25. Which of the following is a common military taboo listed in the reviewer?",
+                "options": [
+                        "A) Saluting outdoors",
+                        "B) Addressing enlisted personnel by rank and last name",
+                        "C) Avoiding excessive indebtedness",
+                        "D) Visiting sick comrades"
+                ],
+                "answer": 2,
+                "explain": "Avoiding excessive indebtedness is a common military taboo so soldiers manage finances responsibly and uphold service honor."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "26. What are traditions in the military context?",
+                "options": [
+                        "A) Written court-martial rules",
+                        "B) Inherited principles, standards, and policies that serve as guides for an individual or group",
+                        "C) Temporary unit schedules",
+                        "D) Regulations passed only by civilian lawmakers"
+                ],
+                "answer": 1,
+                "explain": "Traditions are inherited principles, standards, and policies that serve as guides for an individual or group."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "27. What are customs, and what force do they take through continued usage?",
+                "options": [
+                        "A) Accepted practices realized through continued usage that take the force and effect of common law",
+                        "B) Optional hobbies practiced off base",
+                        "C) Strict orders issued only in combat",
+                        "D) Ceremonies performed once a decade"
+                ],
+                "answer": 0,
+                "explain": "Customs are accepted practices realized through continued usage that take the force and effect of common law."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "28. How is the Tradition of Valor defined?",
+                "options": [
+                        "A) Serving 24 hours of duty without complaint",
+                        "B) Gallantry in the face of clear danger; knowing how and when to fight and fight with honor",
+                        "C) Wearing medals only on holidays",
+                        "D) Hosting unit social gatherings"
+                ],
+                "answer": 1,
+                "explain": "Tradition of Valor is gallantry in the face of clear danger\u2014knowing how and when to fight and fight with honor."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "29. How is the Tradition of Duty shown according to the reviewer?",
+                "options": [
+                        "A) Performing tasks with a deep sense of responsibility and self-sacrifice, such as serving up to more than 24 hours of duty without hesitation and question",
+                        "B) Choosing only light assignments",
+                        "C) Asking for extra pay during routine drills",
+                        "D) Leaving posts early when tired"
+                ],
+                "answer": 0,
+                "explain": "Tradition of Duty is performing tasks with deep responsibility and self-sacrifice, such as serving more than 24 hours of duty without hesitation."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "30. What is the Tradition of Honor?",
+                "options": [
+                        "A) Leading a life in peace or war in personal dignity and self-worth, without exchanging honor/dignity for the glitter of gold or color of money",
+                        "B) Seeking promotion above all else",
+                        "C) Displaying weapons during parades",
+                        "D) Avoiding all ceremonial duties"
+                ],
+                "answer": 0,
+                "explain": "Tradition of Honor is leading a life of personal dignity and self-worth, never trading honor for gold or money."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "31. Which tradition is described as the strongest, most enduring, and powerful military tradition?",
+                "options": [
+                        "A) Tradition of Valor",
+                        "B) Tradition of Solidarity",
+                        "C) Tradition of Duty",
+                        "D) Tradition of Honor"
+                ],
+                "answer": 1,
+                "explain": "Unity (Tradition of Solidarity) is the strongest, most enduring, and powerful military tradition."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "32. What does the Tradition of Loyalty emphasize?",
+                "options": [
+                        "A) Loyalty only to one's immediate squad",
+                        "B) Loving and respecting the country enough to give the supreme sacrifice if needed, and respecting the Constitution and national symbols",
+                        "C) Prioritizing personal wealth over service",
+                        "D) Avoiding ceremonies involving the flag"
+                ],
+                "answer": 1,
+                "explain": "Tradition of Loyalty reflects love and respect for the country, Constitution, and national symbols, even unto supreme sacrifice."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "33. To whom does a military salute always pertain?",
+                "options": [
+                        "A) Civilians",
+                        "B) Military men",
+                        "C) Foreign tourists",
+                        "D) Retired civilians only"
+                ],
+                "answer": 1,
+                "explain": "In the customs and traditions section, the salute always pertains to military men."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "34. During the Flag Raising Ceremony, why does the band play the national anthem?",
+                "options": [
+                        "A) To signal the start of sports games",
+                        "B) To pledge that all weekly efforts are dedicated to this country",
+                        "C) To dismiss the formation early",
+                        "D) To announce mealtime"
+                ],
+                "answer": 1,
+                "explain": "The band plays the national anthem to pledge that all weekly efforts are dedicated to the country."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "35. During the Flag Retreat Ceremony, what signals all personnel to pause and salute the flag?",
+                "options": [
+                        "A) A whistle",
+                        "B) A tap or gun",
+                        "C) A bell",
+                        "D) A shout from the gate guard"
+                ],
+                "answer": 1,
+                "explain": "A tap or gun signals that all must pause for a moment to salute the flag."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "36. What is the meaning of The Three Volleys of Fire Over Graves?",
+                "options": [
+                        "A) A warning signal to nearby patrols",
+                        "B) A sign of respect and gesture of farewell tendered to a departed comrade-in-arms",
+                        "C) A celebration of a military victory",
+                        "D) A test of new rifles"
+                ],
+                "answer": 1,
+                "explain": "Three volleys of fire over graves are a sign of respect and farewell to a departed comrade-in-arms."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "37. What is The White Flag of Truce used to signal?",
+                "options": [
+                        "A) Surrender of an entire nation's treasury",
+                        "B) Temporary cessation of hostilities between warring factions",
+                        "C) The start of a parade",
+                        "D) A medical evacuation only"
+                ],
+                "answer": 1,
+                "explain": "The white flag of truce signals a temporary cessation of hostilities between warring factions."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "38. How should decorations and medals be worn?",
+                "options": [
+                        "A) Hidden under outer garments",
+                        "B) Worn proudly to show others one's dearest accomplishments",
+                        "C) Only by retired personnel",
+                        "D) Worn at random on any uniform"
+                ],
+                "answer": 1,
+                "explain": "Decorations and medals shall be worn proudly to show others one's dearest accomplishments."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "39. What is noted about The Raising of the Right Hand in Taking Oath?",
+                "options": [
+                        "A) It is a recent tradition from the 1990s",
+                        "B) From the earliest days, taking an oath for truth of statement or testimony has been a solemn and serious matter accompanied by ceremony",
+                        "C) It is used only for civilian contracts",
+                        "D) It is done with the left hand"
+                ],
+                "answer": 1,
+                "explain": "From the earliest days, taking an oath for truth of statement or testimony has been a solemn and serious matter accompanied by ceremony."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "40. What is Courtesy of the Post?",
+                "options": [
+                        "A) A permanent transfer to another base",
+                        "B) A short stay in a camp extended to armed forces members allowing use of camp facilities similar to permanent party",
+                        "C) A discount at civilian malls",
+                        "D) An exemption from all rules"
+                ],
+                "answer": 1,
+                "explain": "Courtesy of the Post extends a short stay in a camp to armed forces members so they can use camp facilities like permanent party."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "41. What is the purpose of the Presentation of Recruits ceremony?",
+                "options": [
+                        "A) Discharging soldiers after retirement",
+                        "B) Presenting new soldiers to the color to signify acceptance and welcome into the organization",
+                        "C) Conducting medical exams",
+                        "D) Assigning overseas leaves"
+                ],
+                "answer": 1,
+                "explain": "New soldiers are presented to the color to signify acceptance and welcome into the organization."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "42. When is a Farewell Tendered to a Departing Officer given, and what can serve when time is a constraint?",
+                "options": [
+                        "A) Given upon retirement; a parade serves when time is tight",
+                        "B) Tendered for a change of assignment (usually by the unit's officer and personnel); a happy hour will do when time is a constraint",
+                        "C) Given upon enlistment; a formal dinner is mandatory",
+                        "D) Given weekly; a speech is required"
+                ],
+                "answer": 1,
+                "explain": "Tendered for a change of assignment by the unit's officer and personnel; when time is constrained, a happy hour will do."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "43. Why is a Ceremony Tendered to a Retiree held?",
+                "options": [
+                        "A) In recognition of long, fruitful, and honorable service to the AFP",
+                        "B) To reassign the retiree to another battalion",
+                        "C) To review unfinished paperwork",
+                        "D) To elect a new commander"
+                ],
+                "answer": 0,
+                "explain": "It recognizes the retiree's long, fruitful, and honorable service to the AFP."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "44. What do Trumpet or Bugle Calls do in military life?",
+                "options": [
+                        "A) Replace all verbal commands",
+                        "B) Add distinction and excitement to the regimented life of a soldier",
+                        "C) Signal only emergencies",
+                        "D) Mark the end of enlistment"
+                ],
+                "answer": 1,
+                "explain": "Trumpet or bugle calls add distinction and excitement to the regimented life of a soldier."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "45. Which of the following is an occasion for Courtesy Calls?",
+                "options": [
+                        "A) An officer detailed outside rejoining his mother service",
+                        "B) Ignoring a newly promoted officer",
+                        "C) Skipping arrival/departure formalities",
+                        "D) Avoiding major service commanders"
+                ],
+                "answer": 0,
+                "explain": "Courtesy calls are made when rejoining a mother service, upon arrival/departure, when assuming key positions, or upon promotion."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "46. What occurs during Happy Hour according to the reviewer?",
+                "options": [
+                        "A) Ignoring ethical standards",
+                        "B) Airing minor gripes / blowing off minor steam, inquiring about leave, while conforming strictly with moral and ethical standards",
+                        "C) Conducting formal court proceedings",
+                        "D) Issuing combat orders"
+                ],
+                "answer": 1,
+                "explain": "Happy Hour allows airing minor gripes, blowing off minor steam, and inquiring about leave while strictly upholding moral and ethical standards."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "47. How are Military Weddings conducted?",
+                "options": [
+                        "A) Completely differently from all religious faiths",
+                        "B) The same as with all faiths, except chaplains of different churches incorporate other procedures",
+                        "C) Only outdoors on firing ranges",
+                        "D) Without any religious officiant"
+                ],
+                "answer": 1,
+                "explain": "Military weddings follow the same traditions as all faiths, with chaplains of different churches incorporating additional procedures."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "48. Who spends off-duty hours in EP Clubhouses?",
+                "options": [
+                        "A) Enlisted personnel (EP)",
+                        "B) Civilian contractors only",
+                        "C) Foreign diplomats only",
+                        "D) Hospital patients"
+                ],
+                "answer": 0,
+                "explain": "Enlisted personnel (EP) spend their off-duty hours in EP clubhouses."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "49. To what does 'Rank Has Its Privileges' apply when a choice is to be made?",
+                "options": [
+                        "A) Selecting billeting or quarters",
+                        "B) Bypassing first aid duties",
+                        "C) Ignoring traffic laws",
+                        "D) Excusing mistakes in training"
+                ],
+                "answer": 0,
+                "explain": "Rank Has Its Privileges applies when a choice must be made, such as the selection of billeting or quarters."
+        },
+        {
+                "topic": "Section 2: Military Customs and Traditions (Questions 26-50)",
+                "q": "50. What is a commander's 'I wish and I desire' similar to, and what is expected in Survivor Assistance to the Family?",
+                "options": [
+                        "A) A casual suggestion; assistance applies only to retirement",
+                        "B) Similar to an order; assistance applies upon the death of a soldier or a member of a soldier's family (and sick comrades are visited by available personnel)",
+                        "C) A request that may be ignored; no family assistance is provided",
+                        "D) A holiday greeting; assistance is handled only by civilians"
+                ],
+                "answer": 1,
+                "explain": "A commander's wish or desire is similar to an order, and survivor assistance is provided upon the death of a soldier or family member."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "51. What is first aid?",
+                "options": [
+                        "A) Final surgical care in a hospital",
+                        "B) Temporary care given to an injured or ill person before definitive treatment can be given by medically trained personnel",
+                        "C) Long-term physical therapy",
+                        "D) Prescription medication given at a pharmacy"
+                ],
+                "answer": 1,
+                "explain": "First aid is temporary care given to an injured or ill person before definitive treatment by medically trained personnel."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "52. What are self-aid and a first aider?",
+                "options": [
+                        "A) Self-aid is care given to oneself; a first aider is a person who gives first aid",
+                        "B) Self-aid is care given by a doctor; a first aider is an ambulance driver",
+                        "C) Self-aid is hospital admission; a first aider is a nurse",
+                        "D) Self-aid is emergency surgery; a first aider is a casualty"
+                ],
+                "answer": 0,
+                "explain": "Self-aid is care given to oneself, and a first aider is the person who administers first aid."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "53. When checking for responsiveness, how should you speak to and check the casualty?",
+                "options": [
+                        "A) Whisper quietly and avoid touching them",
+                        "B) Ask in a loud, calm voice 'Are you okay?' and gently shake or tap the casualty on the shoulder",
+                        "C) Shout angrily and shake violently",
+                        "D) Shine a light in their eyes without speaking"
+                ],
+                "answer": 1,
+                "explain": "Ask in a loud, calm voice 'Are you okay?' and gently shake or tap the casualty on the shoulder."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "54. What should you do if the casualty is conscious versus unconscious?",
+                "options": [
+                        "A) Conscious: begin mouth-to-mouth; Unconscious: ask what hurts",
+                        "B) Conscious: ask what it hurts; Unconscious: begin first aid measures",
+                        "C) Both: give food and water immediately",
+                        "D) Both: leave them alone until an ambulance arrives"
+                ],
+                "answer": 1,
+                "explain": "If conscious, ask what hurts; if unconscious, begin first aid measures immediately."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "55. Which of the following is a first aid measure for an unconscious casualty?",
+                "options": [
+                        "A) Give them something to drink",
+                        "B) Ensure abundant supply of fresh air, keep back crowds, remove false teeth, and maintain an open airway",
+                        "C) Sit them upright and walk them around",
+                        "D) Cover their mouth and nose"
+                ],
+                "answer": 1,
+                "explain": "For an unconscious casualty, ensure abundant fresh air, keep back crowds, remove false teeth, and maintain an open airway."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "56. How do you check for breathing using look, listen, and feel?",
+                "options": [
+                        "A) Look for chest rise/fall; place ear about 1 inch from mouth/nose to listen; place cheek about 1 inch above mouth/nose to feel",
+                        "B) Look at the feet; listen at 10 inches; feel the forehead",
+                        "C) Look at the fingernails; listen against the back; feel the wrist",
+                        "D) Only look at the eyes for 30 seconds"
+                ],
+                "answer": 0,
+                "explain": "Look for chest rise/fall, listen with your ear ~1 inch from mouth/nose, and feel with your cheek ~1 inch above mouth/nose."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "57. If the casualty is not breathing, what should you do?",
+                "options": [
+                        "A) Continue waiting and rechecking every 5 minutes",
+                        "B) Stop the evaluation and begin treatment",
+                        "C) Roll them onto their stomach and leave",
+                        "D) Move them to a crowded area"
+                ],
+                "answer": 1,
+                "explain": "If the casualty is not breathing, stop the evaluation and begin treatment (artificial respiration)."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "58. What is artificial respiration?",
+                "options": [
+                        "A) A procedure for causing air to flow into and out of the lungs when normal or natural breathing is inadequate or has ceased",
+                        "B) Bandaging a scraped knee",
+                        "C) Checking blood pressure with a cuff",
+                        "D) Applying a cold compress to a bruise"
+                ],
+                "answer": 0,
+                "explain": "Artificial respiration causes air to flow into and out of the lungs when normal breathing is inadequate or has ceased."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "59. In mouth-to-mouth resuscitation, how should the victim be positioned and how should the head/airway be prepared?",
+                "options": [
+                        "A) Face down with head turned sideways",
+                        "B) On their back flat on the ground; clear airways of obstructions (including false dentures) and tilt the head backward",
+                        "C) Sitting upright with head tilted forward",
+                        "D) Standing with arms raised"
+                ],
+                "answer": 1,
+                "explain": "Place the victim flat on their back, clear the airways (including false dentures), and tilt the head backward."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "60. In mouth-to-mouth resuscitation, what is the initial ventilator maneuver and ongoing interval for about one minute?",
+                "options": [
+                        "A) 1 slow blow every 15 seconds",
+                        "B) Pinch nose closed, create a tight seal over mouth, give 2 quick blows, then 1 blow every 5 seconds for about one minute",
+                        "C) 5 quick blows, then pause for 2 minutes",
+                        "D) 10 blows without pinching the nose"
+                ],
+                "answer": 1,
+                "explain": "Pinch the nose closed, seal your mouth over the victim's mouth, give 2 quick blows, then 1 blow every 5 seconds for about one minute."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "61. During mouth-to-mouth resuscitation, where do you check pulse and what indicates continuing until the victim breathes on their own?",
+                "options": [
+                        "A) Radial pulse (wrist); if pupils are dilated",
+                        "B) Carotid artery (neck); if pupils are not dilated and pulse beats are present",
+                        "C) Femoral pulse (groin); if skin turns blue",
+                        "D) Brachial pulse (elbow); if breathing stops again after 10 seconds"
+                ],
+                "answer": 1,
+                "explain": "Check the carotid artery (neck); if pupils are not dilated and a pulse is present, continue until the victim breathes on their own."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "62. What is a wound, and what can happen if it is not managed properly?",
+                "options": [
+                        "A) A bruise without broken skin; causes mild itching",
+                        "B) A break in the continuity of the skin / opening allowing blood to escape; if unmanaged, can cause hemorrhage, shock, and death",
+                        "C) A muscle cramp; causes temporary stiffness",
+                        "D) A headache; causes drowsiness"
+                ],
+                "answer": 1,
+                "explain": "A wound is a break in skin continuity allowing blood to escape; if unmanaged, it can cause hemorrhage, shock, and death."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "63. Which wound is caused by a sharp-bladed object and presents a clean cut?",
+                "options": [
+                        "A) Punctured wound",
+                        "B) Incised wound",
+                        "C) Abrasion",
+                        "D) Lacerated wound"
+                ],
+                "answer": 1,
+                "explain": "An incised wound is caused by a sharp-bladed object and presents a clean cut."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "64. Which wound is usually caused by a sharp-pointed object?",
+                "options": [
+                        "A) Punctured wound",
+                        "B) Incised wound",
+                        "C) Avulsion",
+                        "D) Abrasion"
+                ],
+                "answer": 0,
+                "explain": "A punctured wound is usually caused by a sharp-pointed object."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "65. What is an avulsion (avulsed wound)?",
+                "options": [
+                        "A) A wound from scraping rough surfaces",
+                        "B) A kind of wound involving a forcible separation or tearing of tissue from the victim's body",
+                        "C) A clean cut from a razor",
+                        "D) A minor skin rash"
+                ],
+                "answer": 1,
+                "explain": "An avulsion involves a forcible separation or tearing of tissue from the victim's body."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "66. How do a lacerated wound and an abrasion differ?",
+                "options": [
+                        "A) Lacerated is caused by a hard or blunt object; abrasion results from scraping rough surfaces",
+                        "B) Lacerated is a clean cut; abrasion is a forcible separation of a limb",
+                        "C) Both are caused by sharp-pointed needles",
+                        "D) Both involve no skin break"
+                ],
+                "answer": 0,
+                "explain": "Lacerated wounds are caused by hard or blunt objects, whereas abrasions result from scraping rough surfaces."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "67. What is amputation?",
+                "options": [
+                        "A) Forcible separation of any body part",
+                        "B) Pressing a sterile dressing over bleeding",
+                        "C) Raising an injured leg",
+                        "D) Loosening tight clothing"
+                ],
+                "answer": 0,
+                "explain": "Amputation is a wound resulting from the forcible separation of any body part."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "68. What is the normal adult blood volume, and what dangerous state occurs from blood loss?",
+                "options": [
+                        "A) 2 liters; heat stroke",
+                        "B) 5 liters; hypovolemic shock",
+                        "C) 10 liters; dehydration",
+                        "D) 3 liters; hypothermia"
+                ],
+                "answer": 1,
+                "explain": "Normal adult blood volume is 5 liters, and severe blood loss leads to hypovolemic shock."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "69. Which of the following is NOT one of the four listed first aid measures for wounds?",
+                "options": [
+                        "A) Direct pressure",
+                        "B) Elevation",
+                        "C) Digital pressure",
+                        "D) Splinting a collarbone"
+                ],
+                "answer": 3,
+                "explain": "The four first aid measures for wounds are Direct Pressure, Elevation, Digital Pressure, and Tourniquet."
+        },
+        {
+                "topic": "Section 3: First Aid (Questions 51-70)",
+                "q": "70. What is a tourniquet, and what is a proper first aid step for internal bleeding?",
+                "options": [
+                        "A) A constricting band placed around the arm or leg to control bleeding; for internal bleeding, help the casualty lie down, raise legs above heart level, loosen clothing, call for medical help at once, keep warm, and do not let them eat, drink, or smoke",
+                        "B) A cold pack placed on the forehead; for internal bleeding, give hot coffee and food",
+                        "C) A sterile bandage over the eyes; for internal bleeding, have the casualty stand and walk",
+                        "D) A sling for the neck; for internal bleeding, ignore breathing"
+                ],
+                "answer": 0,
+                "explain": "A tourniquet is a constricting band around a limb to control bleeding; internal bleeding treatment includes lying down, elevating legs, loosening clothing, calling medical help, keeping warm, and giving nothing by mouth."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "71. How is Military History defined in the reviewer?",
+                "options": [
+                        "A) A fictional collection of war stories",
+                        "B) 'An accurate, objective, descriptive and interpretive record of the activities of the armed forces in peace and war'",
+                        "C) A list of weapon prices",
+                        "D) A biography of foreign generals only"
+                ],
+                "answer": 1,
+                "explain": "Military History is defined as an accurate, objective, descriptive, and interpretive record of the activities of the armed forces in peace and war."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "72. Why is studying military history important according to the reviewer?",
+                "options": [
+                        "A) It replaces practical field training",
+                        "B) It guides instruction and training of troops and forms the foundation of military strategy and tactics",
+                        "C) It applies only to civilian clerks",
+                        "D) It focuses solely on naval ships"
+                ],
+                "answer": 1,
+                "explain": "Military history guides theoretical and practical troop training and forms the foundation of military strategy and tactics."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "73. When did the Battle of Mactan occur, and who led the native warriors who defeated Ferdinand Magellan?",
+                "options": [
+                        "A) July 7, 1892; Andres Bonifacio",
+                        "B) April 27, 1521; Lapu-Lapu",
+                        "C) December 10, 1898; Emilio Aguinaldo",
+                        "D) October 20, 1944; Gregorio del Pilar"
+                ],
+                "answer": 1,
+                "explain": "On April 27, 1521, Lapu-Lapu and the warriors of Mactan defeated Ferdinand Magellan's Spanish force."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "74. What historical significance does April 27, 1521 hold in the reviewer?",
+                "options": [
+                        "A) Signing of the Treaty of Paris",
+                        "B) Marked the first organized resistance of Filipinos against foreign invaders",
+                        "C) Founding of the Philippine Commonwealth",
+                        "D) Surrender of Corregidor"
+                ],
+                "answer": 1,
+                "explain": "April 27, 1521 marked the first organized resistance of Filipinos against foreign invaders."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "75. Under the National Defense Act (Commonwealth Act No. 1), who sought General Douglas MacArthur's services, and when was the Philippine Commonwealth established?",
+                "options": [
+                        "A) Emilio Aguinaldo; June 12, 1898",
+                        "B) President Manuel Luis Quezon; November 15, 1935",
+                        "C) Andres Bonifacio; March 22, 1897",
+                        "D) Ramon Magsaysay; July 1, 1947"
+                ],
+                "answer": 1,
+                "explain": "Following the establishment of the Philippine Commonwealth on November 15, 1935, President Manuel Luis Quezon sought General Douglas MacArthur's services."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "76. What does the National Defense Act state about the obligation to preserve the State?",
+                "options": [
+                        "A) Only regular soldiers must defend the country",
+                        "B) Preservation of the State is the obligation of every citizen, guaranteed by employing all citizens (without distinction of age or sex) and all resources",
+                        "C) Only men over 30 are required to participate",
+                        "D) Defense relies solely on foreign armies"
+                ],
+                "answer": 1,
+                "explain": "The preservation of the State is every citizen's obligation, guaranteed by employing all citizens (without distinction of age or sex) and all resources."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "77. Which executive order in the Post-WWII era led to the creation of the AFP and created four military areas?",
+                "options": [
+                        "A) Commonwealth Act No. 1",
+                        "B) Executive Order No. 389",
+                        "C) Treaty of Paris",
+                        "D) Anti-Brigandage Act"
+                ],
+                "answer": 1,
+                "explain": "Executive Order No. 389 led to the creation of the AFP and established four military areas."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "78. How long did Spanish Colonial Rule last, and into what three categories were revolts grouped?",
+                "options": [
+                        "A) 50 years; naval, air, and cyber revolts",
+                        "B) More than 300 years (1565\u20131898); personal/religious revolts, resistance to Spanish-imposed economic/religious institutions, and land problems",
+                        "C) 100 years; urban, coastal, and mountain revolts",
+                        "D) 20 years; trade, tax, and language revolts"
+                ],
+                "answer": 1,
+                "explain": "Spanish rule lasted over 300 years (1565\u20131898), and revolts were categorized into personal/religious, economic/religious institution resistance, and land problems."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "79. Why did early revolts against Spain fail according to the reviewer?",
+                "options": [
+                        "A) Overwhelming Spanish naval support from Japan",
+                        "B) Absence of a national leader, lukewarm spirit of nationalism among Filipinos, and inadequate training and preparation for warfare",
+                        "C) Lack of food in Spain",
+                        "D) Complete peace treaties signed in 1600"
+                ],
+                "answer": 1,
+                "explain": "Early revolts failed due to the absence of a national leader, lukewarm nationalism, and inadequate training and preparation."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "80. When and by whom was the Katipunan (KKK) founded, and what blood rite symbolized loyalty?",
+                "options": [
+                        "A) March 22, 1897 by Emilio Aguinaldo; falta",
+                        "B) July 7, 1892 by Andres Bonifacio (on Azcarraga Street, Tondo, Manila); sanduguan (blood compact)",
+                        "C) December 2, 1899 by Gregorio del Pilar; bayani",
+                        "D) February 4, 1899 by Artemio Ricarte; bayanihan"
+                ],
+                "answer": 1,
+                "explain": "Andres Bonifacio founded the KKK on July 7, 1892 in Tondo, Manila, where members performed sanduguan (blood compact)."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "81. When and where were the Philippine Revolutionary Government (PRG) and its Army born, and who was named Captain General / Father of the Philippine Army?",
+                "options": [
+                        "A) November 15, 1935 in Manila; Lapu-Lapu",
+                        "B) March 22, 1897 at Tejeros in Cavite; General Artemio Ricarte",
+                        "C) October 20, 1944 in Leyte; Macario Sakay",
+                        "D) July 7, 1892 in Cebu; Miguel Lukban"
+                ],
+                "answer": 1,
+                "explain": "The PRG and its Army were born on March 22, 1897 at Tejeros in Cavite, with General Artemio Ricarte named Captain General."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "82. When was the Treaty of Paris signed, and what did it do regarding the Philippines?",
+                "options": [
+                        "A) April 27, 1521; granted independence to Mactan",
+                        "B) December 10, 1898; ceded the Philippines to the United States",
+                        "C) May 6, 1942; ended World War II in Asia",
+                        "D) July 1, 1947; created the Katipunan"
+                ],
+                "answer": 1,
+                "explain": "Signed on December 10, 1898 by Spain and the United States, the Treaty of Paris ceded the Philippines to the US."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "83. When did the Filipino-American War erupt, what incident sparked it, and what was the role of the Philippine Scouts?",
+                "options": [
+                        "A) December 10, 1898; Tejeros incident; Scouts fought for Spain",
+                        "B) February 4, 1899; San Juan Bridge incident; Philippine Scouts were native Filipinos assigned to the US Army's Philippine Department (1901 to WWII, suffix (PS))",
+                        "C) September 28, 1901; Cavite mutiny; Scouts were Japanese officers",
+                        "D) November 15, 1935; Bataan march; Scouts were civilian police"
+                ],
+                "answer": 1,
+                "explain": "The war erupted on February 4, 1899 (San Juan Bridge incident); Philippine Scouts were native Filipinos in the US Army's Philippine Department (1901\u2013WWII)."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "84. Who commanded the 60-man rear guard at the Battle of Tirad Pass (December 2, 1899), and who founded Republika ng Katagalugan / the Tagalog Republic?",
+                "options": [
+                        "A) Brigadier General Gregorio del Pilar; Macario Sakay y de Le\u00f3n",
+                        "B) General Artemio Ricarte; Rajah Humabon",
+                        "C) Ferdinand Magellan; Miguel Lukban",
+                        "D) Manuel Luis Quezon; Andres Bonifacio"
+                ],
+                "answer": 0,
+                "explain": "Brigadier General Gregorio del Pilar defended Tirad Pass on December 2, 1899, and Macario Sakay established Republika ng Katagalugan."
+        },
+        {
+                "topic": "Section 4: Philippine Military History (Questions 71-85)",
+                "q": "85. What happened during the Balangiga Massacre (1901) and what order did General Smith issue?",
+                "options": [
+                        "A) General Lukban's forces raided a US detachment in Balangiga, Samar; General Smith ordered all persons 10 years and older killed",
+                        "B) A naval battle in Manila Bay; Smith ordered all ships sunk",
+                        "C) A peaceful treaty signing; Smith ordered a holiday",
+                        "D) A retreat from Bataan; Smith ordered prisoners released"
+                ],
+                "answer": 0,
+                "explain": "General Lukban raided a US detachment in Balangiga, Samar in 1901, prompting General Smith's brutal order to kill all persons 10 years and older."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "86. During WWII in the Philippines, how were Philippine Army divisions organized and under whose command?",
+                "options": [
+                        "A) 2 regular and 10 reserve divisions incorporated into the USAFFE under General Douglas MacArthur",
+                        "B) 50 regular divisions under Spanish command",
+                        "C) 1 division under civilian mayors",
+                        "D) No Philippine divisions fought in WWII"
+                ],
+                "answer": 0,
+                "explain": "Two regular and ten reserve divisions of the Philippine Army were incorporated into the USAFFE under General MacArthur."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "87. What caused the collapse of defenses on Bataan, and when did Corregidor surrender?",
+                "options": [
+                        "A) Excess supplies; surrendered October 20, 1944",
+                        "B) Problems with food supply, sickness, and malnutrition caused Bataan's defenses to collapse; Corregidor surrendered on May 6, 1942",
+                        "C) Lack of rain; surrendered July 7, 1892",
+                        "D) Peace treaties; surrendered December 10, 1898"
+                ],
+                "answer": 1,
+                "explain": "Food shortages, sickness, and malnutrition collapsed Bataan's defenses, and Corregidor surrendered on May 6, 1942."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "88. What was the Hukbalahap (Hukbong Bayan Laban sa mga Hapon), and what were its roots?",
+                "options": [
+                        "A) A Spanish friar order",
+                        "B) A resistance/peasant guerrilla movement against Japanese occupation rooted in the Spanish encomienda and landlord-tenant tensions",
+                        "C) An American cavalry unit",
+                        "D) A post-war aviation school"
+                ],
+                "answer": 1,
+                "explain": "The Hukbalahap was an anti-Japanese peasant guerrilla resistance movement with deep roots in the Spanish encomienda and agrarian tensions."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "89. When and where did the major Allied liberation landing take place (moved forward from November 15, 1944 at Sarangani Bay)?",
+                "options": [
+                        "A) April 27, 1521 at Mactan",
+                        "B) October 20, 1944 at Leyte",
+                        "C) May 6, 1942 at Bataan",
+                        "D) February 4, 1899 at San Juan Bridge"
+                ],
+                "answer": 1,
+                "explain": "The Allied landing was advanced to October 20, 1944 and relocated to Leyte."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "90. What occurred on July 1, 1947 in the post-WWII era, and what was Headquarters National Defense Forces renamed?",
+                "options": [
+                        "A) A small contingent of aircraft was flown by Filipino pilots, and Headquarters National Defense Forces was renamed GHQ AFP",
+                        "B) The Katipunan was dissolved, and renamed the Spanish Army",
+                        "C) The Treaty of Paris was signed, and renamed the Commonwealth",
+                        "D) Corregidor was built, and renamed Tirad Pass"
+                ],
+                "answer": 0,
+                "explain": "On July 1, 1947, Filipino pilots flew a small contingent of aircraft, and Headquarters National Defense Forces was renamed GHQ AFP."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "91. What type of rifle is the M16 according to the reviewer?",
+                "options": [
+                        "A) 7.62mm bolt-action sniper rifle",
+                        "B) 5.56mm, gas-operated, air-cooled, magazine-fed, shoulder- or hip-fired selective-fire assault rifle",
+                        "C) 9mm single-shot pistol",
+                        "D) .50-caliber water-cooled machine gun"
+                ],
+                "answer": 1,
+                "explain": "The M16 is a 5.56mm, gas-operated, air-cooled, magazine-fed, shoulder- or hip-fired selective-fire assault rifle."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "92. Compare the cartridge/caliber used by the M16A1 versus the M16A2 / M16A4.",
+                "options": [
+                        "A) M16A1: 5.56\u00d745mm (M193); M16A2 / M16A4: 5.56\u00d745mm NATO (M855)",
+                        "B) M16A1: .45 ACP; M16A2 / M16A4: 9mm",
+                        "C) M16A1: 5.56\u00d745mm NATO (M855); M16A2 / M16A4: 5.56\u00d745mm (M193)",
+                        "D) Both use black powder musket balls"
+                ],
+                "answer": 0,
+                "explain": "The M16A1 uses 5.56\u00d745mm (M193), while the M16A2/M16A4 uses 5.56\u00d745mm NATO (M855)."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "93. What are the barrel length and rifling twist rate of the M16A1 compared to the M16A2 / M16A4?",
+                "options": [
+                        "A) Barrel: 20 in (508 mm) for both; Twist: 1:12 (M16A1) vs. 1:7 (M16A2 / M16A4)",
+                        "B) Barrel: 10 in for both; Twist: 1:20 vs. 1:15",
+                        "C) Barrel: 20 in (M16A1) vs. 14 in (M16A2); Twist: 1:7 vs. 1:12",
+                        "D) Barrel: 30 in for both; Twist: 1:4 vs. 1:2"
+                ],
+                "answer": 0,
+                "explain": "Both have a 20-inch (508 mm) barrel, while the rifling twist rate is 1:12 for M16A1 and 1:7 for M16A2/M16A4."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "94. What are the approximate unloaded weights of the M16A1 and M16A2 / M16A4?",
+                "options": [
+                        "A) M16A1: ~6.4\u20136.5 lbs (2.9 kg); M16A2 / M16A4: ~7.5 lbs (3.4 kg)",
+                        "B) M16A1: ~12 lbs; M16A2 / M16A4: ~15 lbs",
+                        "C) M16A1: ~3 lbs; M16A2 / M16A4: ~4 lbs",
+                        "D) Both weigh exactly 10.0 lbs unloaded"
+                ],
+                "answer": 0,
+                "explain": "Unloaded weight is ~6.4\u20136.5 lbs (2.9 kg) for the M16A1 and ~7.5 lbs (3.4 kg) for the M16A2/M16A4."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "95. Compare the maximum effective range and maximum range of the M16A1 versus the M16A2 / M16A4.",
+                "options": [
+                        "A) M16A1: 460 m max effective (point) / 2,653 m max range; M16A2 / M16A4: 550 m (point) / 800 m (area) max effective / 3,534\u20133,600 m max range",
+                        "B) M16A1: 1,000 m max effective / 5,000 m max range; M16A2 / M16A4: 200 m / 800 m",
+                        "C) Both have a 100 m maximum range",
+                        "D) M16A1: 800 m max effective; M16A2 / M16A4: 300 m max effective"
+                ],
+                "answer": 0,
+                "explain": "M16A1 reaches 460 m max effective (2,653 m max), whereas M16A2/M16A4 reaches 550 m point / 800 m area effective (3,534\u20133,600 m max)."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "96. What are the first four steps of the M16 Eight-Step Cycle of Operations?",
+                "options": [
+                        "A) Unlocking, Extracting, Ejecting, Cocking",
+                        "B) Feeding, Chambering, Locking, Firing",
+                        "C) Firing, Cocking, Ejecting, Feeding",
+                        "D) Chambering, Ejecting, Locking, Cocking"
+                ],
+                "answer": 1,
+                "explain": "The first four steps are Feeding, Chambering, Locking, and Firing."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "97. What are the last four steps of the M16 Eight-Step Cycle of Operations?",
+                "options": [
+                        "A) Feeding, Chambering, Locking, Firing",
+                        "B) Unlocking, Extracting, Ejecting, Cocking",
+                        "C) Locking, Firing, Unlocking, Chambering",
+                        "D) Ejecting, Cocking, Feeding, Firing"
+                ],
+                "answer": 1,
+                "explain": "The last four steps are Unlocking, Extracting, Ejecting, and Cocking."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "98. In the Eight-Step Cycle of Operations, which step uses expanding gas through the gas tube to push the bolt carrier rearward and rotate the bolt open?",
+                "options": [
+                        "A) Feeding",
+                        "B) Firing",
+                        "C) Unlocking",
+                        "D) Cocking"
+                ],
+                "answer": 2,
+                "explain": "During Unlocking, expanding gas travels back through the gas tube, pushing the bolt carrier rearward and rotating the bolt open."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "99. Which components perform extracting and ejecting an empty cartridge case?",
+                "options": [
+                        "A) The extractor claw pulls the empty case out (extracting), and the spring-loaded ejector flips it out through the ejection port (ejecting)",
+                        "B) The butt plate pulls it out, and the front sight ejects it",
+                        "C) The buffer pulls it out, and the flash suppressor ejects it",
+                        "D) The handguard pulls it out, and the bayonet stud ejects it"
+                ],
+                "answer": 0,
+                "explain": "The extractor claw pulls the empty casing out of the chamber, and the spring-loaded ejector flips it out through the ejection port."
+        },
+        {
+                "topic": "Section 5: WWII, Liberation, Post-WWII & M16 Rifle (Questions 86-100)",
+                "q": "100. Which of the following is a part shown on the M16 receiver/rifle diagrams?",
+                "options": [
+                        "A) Cam pin, firing pin, bolt carrier, and buffer/action spring",
+                        "B) Propeller blade, rudder, and tail fin",
+                        "C) Spark plug, radiator cap, and windshield wiper",
+                        "D) Periscope, sonar dome, and ballast tank"
+                ],
+                "answer": 0,
+                "explain": "The M16 diagrams identify components such as the cam pin, firing pin, bolt carrier, and buffer/action spring."
+        }
+];
+
+      const quizContainer = document.getElementById("quizContainer");
+      const quizForm = document.getElementById("quizForm");
+      const scoreBanner = document.getElementById("scoreBanner");
+      const scoreText = document.getElementById("scoreText");
+      const scoreSubtext = document.getElementById("scoreSubtext");
+      const resetBtn = document.getElementById("resetBtn");
+      const topicFilter = document.getElementById("topicFilter");
+
+      function renderQuiz() {
+        let lastTopic = "";
+        quizContainer.innerHTML = "";
+
+        quizData.forEach(function (item, idx) {
+          if (item.topic !== lastTopic) {
+            const h2 = document.createElement("h2");
+            h2.className = "topic-heading";
+            h2.setAttribute("data-topic", item.topic);
+            h2.textContent = item.topic;
+            quizContainer.appendChild(h2);
+            lastTopic = item.topic;
+          }
+
+          const card = document.createElement("div");
+          card.className = "question-card";
+          card.setAttribute("data-index", String(idx));
+          card.setAttribute("data-topic", item.topic);
+
+          const qText = document.createElement("div");
+          qText.className = "question-text";
+          qText.textContent = item.q;
+          card.appendChild(qText);
+
+          const optionsDiv = document.createElement("div");
+          optionsDiv.className = "options";
+
+          item.options.forEach(function (opt, optIdx) {
+            const label = document.createElement("label");
+            label.className = "option-label";
+            label.setAttribute("data-opt-index", String(optIdx));
+
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = "q" + idx;
+            radio.value = String(optIdx);
+
+            const span = document.createElement("span");
+            span.textContent = opt;
+
+            label.appendChild(radio);
+            label.appendChild(span);
+            optionsDiv.appendChild(label);
+          });
+
+          const explainDiv = document.createElement("div");
+          explainDiv.className = "explanation";
+          explainDiv.textContent = item.explain;
+
+          card.appendChild(optionsDiv);
+          card.appendChild(explainDiv);
+          quizContainer.appendChild(card);
+        });
+      }
+
+      function applyFilter() {
+        const chosen = topicFilter.value;
+        document.querySelectorAll(".topic-heading, .question-card").forEach(function (el) {
+          if (chosen === "ALL" || el.getAttribute("data-topic") === chosen) {
+            el.classList.remove("hidden");
+          } else {
+            el.classList.add("hidden");
+          }
+        });
+      }
+
+      function gradeQuiz(event) {
+        if (event) {
+          event.preventDefault();
+        }
+        let score = 0;
+        let total = 0;
+        const chosen = topicFilter.value;
+        const cards = document.querySelectorAll(".question-card");
+
+        cards.forEach(function (card) {
+          const idx = Number(card.getAttribute("data-index"));
+          const itemTopic = quizData[idx].topic;
+          const isVisible = chosen === "ALL" || itemTopic === chosen;
+          const correctIdx = quizData[idx].answer;
+          const selected = card.querySelector('input[name="q' + idx + '"]:checked');
+          const labels = card.querySelectorAll(".option-label");
+          const explain = card.querySelector(".explanation");
+
+          labels.forEach(function (lbl) {
+            lbl.classList.remove("correct", "incorrect");
+            if (Number(lbl.getAttribute("data-opt-index")) === correctIdx) {
+              lbl.classList.add("correct");
+            }
+          });
+
+          if (isVisible) {
+            total += 1;
+          }
+
+          if (selected) {
+            const chosenIdx = Number(selected.value);
+            if (chosenIdx === correctIdx) {
+              if (isVisible) score += 1;
+            } else if (labels[chosenIdx]) {
+              labels[chosenIdx].classList.add("incorrect");
+            }
+          }
+
+          if (explain) {
+            explain.classList.add("visible");
+          }
+        });
+
+        const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+        scoreText.textContent = "Score: " + score + " / " + total + " (" + pct + "%)";
+        scoreSubtext.textContent =
+          pct >= 80
+            ? "Great job! You have a strong grasp of these topics."
+            : "Good review session—check the explanations below for any missed items.";
+        scoreBanner.classList.add("visible");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      topicFilter.addEventListener("change", applyFilter);
+      quizForm.addEventListener("submit", gradeQuiz);
+
+      resetBtn.addEventListener("click", function () {
+        quizForm.reset();
+        scoreBanner.classList.remove("visible");
+        document.querySelectorAll(".option-label").forEach(function (lbl) {
+          lbl.classList.remove("correct", "incorrect");
+        });
+        document.querySelectorAll(".explanation").forEach(function (exp) {
+          exp.classList.remove("visible");
+        });
+      });
+
+      renderQuiz();
+    })();
+  </script>
+</body>
+</html>
